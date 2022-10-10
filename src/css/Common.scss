@@ -1,0 +1,55 @@
+body {
+    background-color: antiquewhite;
+    text-align: center;
+    padding : 20px;
+}
+
+.pageContainer {
+    display: block;
+    margin-top : 20px;
+    margin-bottom: 20px;
+}
+
+.pages {
+    list-style: none;
+    display : block;
+}
+
+.pageObject {
+    display: inline-block;
+}
+
+.pageObject > a, .pageObject > span {
+    padding: 0px;
+    margin-right : 10px;
+    width : 40px;
+    height : 40px;
+    display : block;
+    color : #8a949f;
+    line-height: 40px;
+    text-align: center;
+
+    -webkit-transition: all 0.3s ease 0s;
+}
+
+.pageObject > .active {
+    color : black;
+    font-weight: 700;
+}
+
+
+
+
+
+
+.Header {
+    text-align: right;
+}
+
+.Header > div > button {
+    margin-right: 30px;
+}
+
+.Header > div > span {
+    margin-right: 30px;
+}

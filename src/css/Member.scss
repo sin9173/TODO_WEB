@@ -1,0 +1,19 @@
+@import 'Common';
+
+.Member {
+
+    .inputForm > div > div {
+        display : inline-block;
+        padding : 20px;
+        text-align: left;
+        width : 70px;
+    }
+
+    .title {
+        font-weight: 700;
+        font-size : 20px;
+        margin-top : 50px;
+    }
+
+    
+}
