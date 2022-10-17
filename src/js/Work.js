@@ -11,6 +11,9 @@ export const workList = async (req_data) => {
         memberLogout();
     }
 
+    if(!req_data.page) req_data.page=1;
+    if(isNaN(req_data.page)) req_data.page=1;
+
     await apiConnectGet("/work/list", req_data, token)
     .then((obj) => {
         if(obj.result!='00') alert(obj.message);
