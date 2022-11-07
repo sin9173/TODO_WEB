@@ -106,22 +106,34 @@ class WorkHeader extends React.Component {
 class WorkObject extends React.Component {
 
     state = {
-        content : ''
+        content : '',
+        workState : ''
     }
 
     componentDidMount() {
-        this.setState({content : this.props.data.content})
+        this.setState({
+            content : this.props.data.content,
+            workState : this.props.data.state
+        })
     }
 
-    modifyStateSubmit(id, state, page) {
+    modifyStateSubmit = async(id, state, page) => {
         const req_data = {
             id : id,
             state : state
         }
-        workModifyState(req_data, page);
+        await workModifyState(req_data, page)
+        .then((obj) => {
+            if(page==1) window.location.href='/work/list';
+            if(obj) {
+                this.setState({
+                    workState : state
+                });
+            }
+        })
     }
 
-    modifySubmit(content, page) {        
+    modifySubmit = async(content, page) => {        
         const id = this.props.data.id;
     
         if(!content) {alert("할일을 입력해주세요."); return false;}
@@ -131,7 +143,15 @@ class WorkObject extends React.Component {
             content : content
         }
 
-        workModifyContent(req_data, page);
+        await workModifyContent(req_data, page)
+        .then((obj) => {
+            if(page==1) window.location.href='/work/list';
+            if(obj) {
+                this.setState({
+                    content : req_data.content
+                })
+            }
+        })
     }
 
     content_change = (e) => {
@@ -143,8 +163,8 @@ class WorkObject extends React.Component {
     render() {
         return <div className="WorkList workObject">
             <div className="id">{this.props.data.id}</div>
-            <div className="content"><input type="text" defaultValue={this.props.data.content} onChange={this.content_change}/></div>
-            <div className="state">{this.props.data.state}</div>
+            <div className="content"><input type="text" value={this.state.content} onChange={this.content_change}/></div>
+            <div className="state">{this.state.workState}</div>
             <div className="state_button"><button onClick={this.modifyStateSubmit.bind(this, this.props.data.id, "할일", this.props.page)}>할일</button></div>
             <div className="state_button"><button onClick={this.modifyStateSubmit.bind(this, this.props.data.id, "진행중", this.props.page)}>진행중</button></div>
             <div className="state_button"><button onClick={this.modifyStateSubmit.bind(this, this.props.data.id, "완료됨", this.props.page)}>완료됨</button></div>

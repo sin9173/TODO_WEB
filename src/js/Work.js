@@ -1,24 +1,12 @@
-import { apiConnectGet, apiConnectPost } from "./ApiUtils";
-import { memberLogout } from "./Member";
+import { apiConnectJson, apiConnectParam } from "./ApiUtils";
 
 //TODO 리스트 조회
 export const workList = async (req_data) => {
     let result = {};
-
-    const token = sessionStorage.getItem('token');
-    if(!token) {
-        alert("로그인해주세요.");
-        memberLogout();
-    }
-
-    if(!req_data.page) req_data.page=1;
-    if(isNaN(req_data.page)) req_data.page=1;
-
-    await apiConnectGet("/work/list", req_data, token)
+    await apiConnectParam("/work/list", req_data, localStorage.getItem('user_id'))
     .then((obj) => {
         if(obj.result!='00') alert(obj.message);
-        if(obj.result=='01') memberLogout();
-        if(obj.result=='00') result = obj;
+        else result = obj;
     })
     .catch((err) => {
         console.log(err);
@@ -31,17 +19,10 @@ export const workList = async (req_data) => {
 //최근할일 조회
 export const workRecent = async () => {
     let result = {};
-    const token = sessionStorage.getItem('token');
-    if(!token) {
-        alert("로그인해주세요.");
-        memberLogout();
-    }
-
-    await apiConnectGet("/work/recent", {}, token)
+    await apiConnectParam("/work/recent", {}, localStorage.getItem('user_id'))
     .then((obj) => {
-        if(obj.result!='00') alert(obj.message);
-        if(obj.result=='01') memberLogout();
-        if(obj.result=='00') result = obj;
+        if(obj.result!='00' && obj.result!='08') alert(obj.message);
+        else result = obj;
     })
     .catch((err) => {
         console.log(err);
@@ -53,16 +34,10 @@ export const workRecent = async () => {
 
 //할일 등록
 export const workRegister = async (req_data) => {
-    const token = sessionStorage.getItem('token');
-    if(!token) {
-        alert('로그인해주세요.');
-        window.location.href='/member/login';
-    }
-    await apiConnectPost("/work/register", req_data, token)
+    await apiConnectJson('POST', "/work", req_data, localStorage.getItem('user_id'))
     .then((obj) => {
         if(obj.result!='00') alert(obj.message)
-        if(obj.result=='01') memberLogout();
-        if(obj.result=='00') {
+        else {
             alert('등록되었습니다.');
             window.location.href='/work/list';
         }
@@ -74,49 +49,39 @@ export const workRegister = async (req_data) => {
 }
 
 //할일 상태 수정
-export const workModifyState = async (req_data, page) => {
-    const token = sessionStorage.getItem('token');
-    if(!token) {
-        alert('로그인해주세요.');
-        window.location.href='/member/login';
-    }
-    await apiConnectPost("/work/modify/state", req_data, token)
+export const workModifyState = async (req_data) => {
+    let result = false;
+    await apiConnectJson('PUT', `/work/state/${req_data.id}`, req_data, localStorage.getItem('user_id'))
     .then((obj) => {
         if(obj.result!='00') alert(obj.message)
-        if(obj.result=='01') memberLogout();
-        if(obj.result=='00') {
+        else {
             alert('수정되었습니다.');
-            window.location.href=`/work/list?page=${page}`;
+            result = true;
         }
     })
     .catch((err) => {
         console.log(err);
         alert("에러");
     });
-
-    
+    return result;
 }
 
 //할일 내용 수정
-export const workModifyContent = async (req_data, page) => {
-    const token = sessionStorage.getItem('token');
-    if(!token) {
-        alert('로그인해주세요.');
-        window.location.href='/member/login';
-    }
-    await apiConnectPost("/work/modify/info", req_data, token)
+export const workModifyContent = async (req_data) => {
+    let result = false;
+    await apiConnectJson('PUT', `/work/${req_data.id}`, req_data, localStorage.getItem('user_id'))
     .then((obj) => {
         if(obj.result!='00') alert(obj.message)
-        if(obj.result=='01') memberLogout();
-        if(obj.result=='00') {
+        else {
             alert('수정되었습니다.');
-            window.location.href=`/work/list?page=${page}`;
+            result = true;
         }
     })
     .catch((err) => {
         console.log(err);
         alert("에러");
-    });
+    }); 
 
-    
+    return result;
+
 }

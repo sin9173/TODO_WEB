@@ -7,7 +7,7 @@ class Header extends React.Component {
     }
 
     componentDidMount() {
-        const token = sessionStorage.getItem('token');
+        const token = localStorage.getItem('todo_login_it');
         if(token) this.setState({isLogin : true});
     }
 
